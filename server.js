@@ -30,6 +30,11 @@ app.get("/gallery/new", (req, res) => {});
 //ACTUALLY ADDS AN IMAGE TO THE GALLERY
 app.post("/gallery", (req, res) => {
   let body = req.body;
+  knex('gallerytable').insert({
+    author: req.author,
+    link: req.link,
+    description: req.description
+  })
 });
 
 //RETRIEVES SPECIFIC IMAGE BY ID
