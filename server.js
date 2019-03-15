@@ -12,6 +12,9 @@ if (!PORT) {
 
 // EXPRESS SERVER STUFF
 const app = express();
+app.use(bodyParser.json({
+  extended: true
+}));
 // const galleryForm = require('./routes/galleryForm.js');
 
 app.get("/", (req, res) => {
@@ -29,12 +32,20 @@ app.get("/", (req, res) => {
 app.get("/gallery/new", (req, res) => {});
 //ACTUALLY ADDS AN IMAGE TO THE GALLERY
 app.post("/gallery", (req, res) => {
-  let body = req.body;
-  knex('gallerytable').insert({
-    author: req.author,
-    link: req.link,
-    description: req.description
-  })
+  const author = req.body.author;
+  const url = req.body.link;
+  const desc = req.body.description;
+  return new Gallery({
+    author,
+    url,
+    desc
+  }).save().then((gallery) => {
+    return res.json({
+      success: true
+    }).catch((err) => {
+      res.status(500);
+    });
+  });
 });
 
 //RETRIEVES SPECIFIC IMAGE BY ID
