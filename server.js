@@ -28,7 +28,9 @@ app.get("/", (req, res) => {
 //DISPLAYS A PAGE WITH FORM TO ADD AN IMAGE TO THE GALLERY
 app.get("/gallery/new", (req, res) => {});
 //ACTUALLY ADDS AN IMAGE TO THE GALLERY
-app.post("/gallery", (req, res) => {});
+app.post("/gallery", (req, res) => {
+  let body = req.body;
+});
 
 //RETRIEVES SPECIFIC IMAGE BY ID
 app.get("/gallery/:id", (req, res) => {});
