@@ -2,6 +2,7 @@ const knex = require("./database/index.js");
 const express = require("express");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
+const Gallery = require('./models/gallerymodel.js');
 
 //PORT STUFF
 const PORT = process.env.PORT;
@@ -14,7 +15,14 @@ const app = express();
 // const galleryForm = require('./routes/galleryForm.js');
 
 app.get("/", (req, res) => {
-  res.json({ smoke: "test" });
+  return new Gallery().fetchAll()
+    .then((gallerytable) => {
+      return res.json(gallerytable);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.sendStatus(500);
+    });
 });
 
 //DISPLAYS A PAGE WITH FORM TO ADD AN IMAGE TO THE GALLERY
