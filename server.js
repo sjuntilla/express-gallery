@@ -1,4 +1,4 @@
-const knex = require('knex');
+const knex = require('./database/index.js');
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
@@ -15,11 +15,9 @@ const app = express();
 
 
 app.get('/', (req, res) => {
-    return knex.select().from('gallerytable').then(gallery => {
-        res.render('gallerytable', {
-            gallerytable
-        });
-    });
+    res.send({
+        'fuck': 'fuck'
+    })
 });
 
 //DISPLAYS A PAGE WITH FORM TO ADD AN IMAGE TO THE GALLERY

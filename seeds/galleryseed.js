@@ -5,18 +5,18 @@ exports.seed = function (knex, Promise) {
       // Inserts seed entries
       return knex('gallerytable').insert([{
           author: 'rowValue1',
-          link: 'https://link',
-          description: 'sweet pic bruh'
+          link: 'adfgad',
+          description: 'adnfgniasdjkfnm'
         },
         {
           author: 'rowValue2',
-          link: 'https://link',
-          description: 'sweet pic bruh'
+          link: 'adfgad',
+          description: 'adnfgniasdjkfnm'
         },
         {
           author: 'rowValue3',
-          link: 'https://link',
-          description: 'sweet pic bruh'
+          link: 'adfgad',
+          description: 'adnfgniasdjkfnm'
         }
       ]);
     });
