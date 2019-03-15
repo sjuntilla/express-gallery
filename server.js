@@ -1,41 +1,38 @@
-const knex = require('./database/index.js');
-const express = require('express');
-const bodyParser = require('body-parser');
-const dotenv = require('dotenv');
+const knex = require("./database/index.js");
+const express = require("express");
+const bodyParser = require("body-parser");
+const dotenv = require("dotenv");
 
 //PORT STUFF
-const PORT = 5432;
+const PORT = process.env.PORT;
 if (!PORT) {
-    console.log('Port not found!');
-};
+  console.log("Port not found!");
+}
 
 // EXPRESS SERVER STUFF
 const app = express();
 // const galleryForm = require('./routes/galleryForm.js');
 
-
-app.get('/', (req, res) => {
-    res.send({
-        'fuck': 'fuck'
-    })
+app.get("/", (req, res) => {
+  res.json({ smoke: "test" });
 });
 
 //DISPLAYS A PAGE WITH FORM TO ADD AN IMAGE TO THE GALLERY
-app.get('/gallery/new', (req, res) => {});
+app.get("/gallery/new", (req, res) => {});
 //ACTUALLY ADDS AN IMAGE TO THE GALLERY
-app.post('/gallery', (req, res) => {});
+app.post("/gallery", (req, res) => {});
 
 //RETRIEVES SPECIFIC IMAGE BY ID
-app.get('/gallery/:id', (req, res) => {});
+app.get("/gallery/:id", (req, res) => {});
 
 //DISPLAYS A PAGE WITH FORM THAT EDITS SPECIFIC IMAGE BY ID
-app.get('/gallery/:id/edit', (req, res) => {});
+app.get("/gallery/:id/edit", (req, res) => {});
 //ACTUALLY EDITS AN IMAGE BY ID
-app.put('/gallery/:id', (req, res) => {});
+app.put("/gallery/:id", (req, res) => {});
 
 //DELETES AN IMAGE BY ID
-app.delete('/gallery/:id', (req, res) => {});
+app.delete("/gallery/:id", (req, res) => {});
 
 app.listen(PORT, () => {
-    console.log(`Whoever is listening on ${PORT} is a bitch!!!!!!`);
+  console.log(`Whoever is listening on ${PORT} is a bitch!!!!!!`);
 });
