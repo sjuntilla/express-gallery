@@ -3,8 +3,8 @@ const bookshelf = require('../database/bookshelf.js');
 class Gallery extends bookshelf.Model {
     get tableName() {
         return 'gallerytable';
-    }
-    get hasTimestamps() {
+    };
+    get hasTimestampts() {
         return true;
     }
 }

@@ -1,7 +1,7 @@
 const knex = require("./database/index.js");
 const express = require("express");
+const hbs = require('express-handlebars');
 const bodyParser = require("body-parser");
-const dotenv = require("dotenv");
 const Gallery = require('./models/gallerymodel.js');
 
 //PORT STUFF
@@ -12,9 +12,10 @@ if (!PORT) {
 
 // EXPRESS SERVER STUFF
 const app = express();
-app.use(bodyParser.json({
+app.use(bodyParser.urlencoded({
   extended: true
 }));
+app.use(bodyParser.json());
 
 
 app.get("/", (req, res) => {
@@ -34,18 +35,19 @@ app.get("/gallery/new", (req, res) => {});
 //ACTUALLY ADDS AN IMAGE TO THE GALLERY
 app.post("/gallery", (req, res) => {
   const body = req.body;
-  Gallery.forge({
+  return Gallery.forge({
     author: body.author,
     link: body.link,
     description: body.description,
-    title: body.title
   }).save(null, {
     method: 'insert'
   }).then(() => {
     new Gallery({
-      title: body.title
+      link: body.link
     }).fetch().then((img) => {
-      return res.redirect(`/gallery/${img.id}`);
+      return res.json({
+        'eat': 'my entire ass'
+      });
     })
   });
 });
@@ -56,17 +58,14 @@ app.get("/gallery/:id", (req, res) => {});
 //DISPLAYS A PAGE WITH FORM THAT EDITS SPECIFIC IMAGE BY ID
 app.get("/gallery/:id/edit", (req, res) => {
   let paramsId = req.params.id;
-  Gallery.where({
-    id: paramsId
-  })
-}).fetch().then((img) => {
-  return res.render('./edit', {
-    id: img.attributes.id,
-    title: img.attributes.title,
-    author: img.attributes.author,
-    link: img.attributes.link,
-    description: img.attributes.description
-  })
+  return Gallery.where({
+      id: paramsId
+    })
+    .fetch().then((img) => {
+      return res.json({
+        'get': 'fucked'
+      })
+    });
 });
 
 //ACTUALLY EDITS AN IMAGE BY ID
@@ -74,20 +73,21 @@ app.put("/gallery/:id", (req, res) => {
   const body = req.body;
   const paramsId = req.params.id;
 
-  Gallery.where({
+  return new Gallery.where({
     id: paramsId
   }).fetch().then((img) => {
     new Gallery({
       id: paramsId
     }).save({
-      title: body.title,
       link: body.link,
       description: body.description,
       author: body.author
     }, {
       patch: true
     }).then(() => {
-      return res.redirect(`/gallery/${img.id}`);
+      return res.json({
+        'i hate': 'bookshelf'
+      })
     });
   });
 });
