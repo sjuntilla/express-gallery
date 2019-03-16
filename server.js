@@ -14,7 +14,7 @@ if (!PORT) {
 const app = express();
 // const galleryForm = require('./routes/galleryForm.js');
 
-app.get("/", (req, res) => {
+app.get("/gallery", (req, res) => {
   return new Gallery()
     .fetchAll()
     .then(gallerytable => {
@@ -40,7 +40,19 @@ app.post("/gallery", (req, res) => {
 });
 
 //RETRIEVES SPECIFIC IMAGE BY ID
-app.get("/gallery/:id", (req, res) => {});
+app.get("/gallery/:id", (req, res) => {
+  let reqParams = req.params.id;
+  return new Gallery()
+    .where({ id: reqParams })
+    .fetch()
+    .then(gallerytable => {
+      return res.json(gallerytable);
+    })
+    .catch(err => {
+      console.log(err);
+      res.sendStatus(500);
+    });
+});
 
 //DISPLAYS A PAGE WITH FORM THAT EDITS SPECIFIC IMAGE BY ID
 app.get("/gallery/:id/edit", (req, res) => {});
