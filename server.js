@@ -1,24 +1,42 @@
 const knex = require("./database/index.js");
 const express = require("express");
+const app = express();
 const hbs = require('express-handlebars');
 const bodyParser = require("body-parser");
 const Gallery = require('./models/gallerymodel.js');
 
-//PORT STUFF
 const PORT = process.env.PORT;
 if (!PORT) {
   console.log("Port not found!");
-}
+};
 
 // EXPRESS SERVER STUFF
-const app = express();
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
 
+//HBS STUFF
+app.engine('handlebars', hbs({
+  defaultLayout: 'index'
+}));
+app.set('view engine', 'handlebars');
+
 
 app.get("/", (req, res) => {
+  return new Gallery().fetchAll()
+    .then((gallerytable) => {
+      return res.render('main', {
+        gallerytable
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.sendStatus(500);
+    });
+});
+
+app.get("/gallery", (req, res) => {
   return new Gallery().fetchAll()
     .then((gallerytable) => {
       return res.json(gallerytable);
@@ -28,7 +46,6 @@ app.get("/", (req, res) => {
       res.sendStatus(500);
     });
 });
-
 //DISPLAYS A PAGE WITH FORM TO ADD AN IMAGE TO THE GALLERY
 app.get("/gallery/new", (req, res) => {});
 
@@ -53,7 +70,9 @@ app.post("/gallery", (req, res) => {
 });
 
 //RETRIEVES SPECIFIC IMAGE BY ID
-app.get("/gallery/:id", (req, res) => {});
+app.get("/gallery/:id", (req, res) => {
+
+});
 
 //DISPLAYS A PAGE WITH FORM THAT EDITS SPECIFIC IMAGE BY ID
 app.get("/gallery/:id/edit", (req, res) => {
@@ -73,7 +92,7 @@ app.put("/gallery/:id", (req, res) => {
   const body = req.body;
   const paramsId = req.params.id;
 
-  return new Gallery.where({
+  Gallery.where({
     id: paramsId
   }).fetch().then((img) => {
     new Gallery({
@@ -102,7 +121,7 @@ app.delete("/gallery/:id", (req, res) => {
     new Gallery({
       id: paramsId
     }).destroy().then(() => {
-      return res.redirect(`/gallery`);
+      return res.redirect('/gallery');
     });
   });
 });
