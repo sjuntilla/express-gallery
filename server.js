@@ -34,27 +34,11 @@ app.get("/gallery/new", (req, res) => {});
 
 //ACTUALLY ADDS AN IMAGE TO THE GALLERY
 app.post("/gallery", (req, res) => {
-<<<<<<< HEAD
-  const author = req.body.author;
-  const url = req.body.link;
-  const desc = req.body.description;
-  return new Gallery({
-    author,
-    url,
-    desc
-  }).save().then((gallery) => {
-    return res.json({
-      success: true
-    }).catch((err) => {
-      res.status(500);
-    });
-=======
   let body = req.body;
   knex("gallerytable").insert({
     author: req.author,
     link: req.link,
     description: req.description
->>>>>>> 867c2511f6481af2d206eb169f1da229ff3d3d69
   });
 });
 
@@ -62,7 +46,9 @@ app.post("/gallery", (req, res) => {
 app.get("/gallery/:id", (req, res) => {
   let reqParams = req.params.id;
   return new Gallery()
-    .where({ id: reqParams })
+    .where({
+      id: reqParams
+    })
     .fetch()
     .then(gallerytable => {
       return res.json(gallerytable);
