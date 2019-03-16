@@ -1,7 +1,7 @@
 exports.up = function (knex, Promise) {
     return knex.schema.createTable('gallerytable', (table) => {
         table.increments();
-        table.string('author').notNullable();
+        table.string('author');
         table.string('link').notNullable();
         table.string('description').notNullable();
     })

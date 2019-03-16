@@ -5,7 +5,7 @@ class Gallery extends bookshelf.Model {
         return 'gallerytable';
     }
     get hasTimestamps() {
-        return false;
+        return true;
     }
 }
 
