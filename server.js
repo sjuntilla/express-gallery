@@ -3,7 +3,9 @@ const express = require("express");
 const app = express();
 const hbs = require('express-handlebars');
 const bodyParser = require("body-parser");
+
 const Gallery = require('./models/gallerymodel.js');
+
 
 const PORT = process.env.PORT;
 if (!PORT) {
@@ -23,14 +25,16 @@ app.engine('handlebars', hbs({
 app.set('view engine', 'handlebars');
 
 
+
 app.get("/", (req, res) => {
   return new Gallery().fetchAll()
     .then((gallerytable) => {
       return res.render('main', {
         gallerytable
       });
+
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       res.sendStatus(500);
     });
@@ -51,6 +55,7 @@ app.get("/gallery/new", (req, res) => {});
 
 //ACTUALLY ADDS AN IMAGE TO THE GALLERY
 app.post("/gallery", (req, res) => {
+
   const body = req.body;
   return Gallery.forge({
     author: body.author,
@@ -66,12 +71,26 @@ app.post("/gallery", (req, res) => {
         'eat': 'my entire ass'
       });
     })
+
   });
 });
 
 //RETRIEVES SPECIFIC IMAGE BY ID
 app.get("/gallery/:id", (req, res) => {
 
+  let reqParams = req.params.id;
+  return new Gallery()
+    .where({
+      id: reqParams
+    })
+    .fetch()
+    .then(gallerytable => {
+      return res.json(gallerytable);
+    })
+    .catch(err => {
+      console.log(err);
+      res.sendStatus(500);
+    });
 });
 
 //DISPLAYS A PAGE WITH FORM THAT EDITS SPECIFIC IMAGE BY ID

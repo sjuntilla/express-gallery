@@ -1,4 +1,4 @@
-const bookshelf = require('../database/bookshelf.js');
+const bookshelf = require("../database/bookshelf.js");
 
 class Gallery extends bookshelf.Model {
     get tableName() {
@@ -7,6 +7,6 @@ class Gallery extends bookshelf.Model {
     get hasTimestampts() {
         return true;
     }
-}
 
-module.exports = bookshelf.model('Gallery', Gallery);
+
+module.exports = bookshelf.model("Gallery", Gallery);
