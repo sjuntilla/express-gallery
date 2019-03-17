@@ -47,10 +47,18 @@ app.get("/", (req, res) => {
 
 app.get("/gallery", (req, res) => {
   return new Gallery().fetchAll()
-    .then((gallerytable) => {
-      return res.json(gallerytable);
+    .then((photo) => {
+      console.log(photo.models)
+      let arr = [];
+      photo.models.forEach(i => {
+        arr.push(i.attributes);
+      });
+      return res.render('main', {
+        arr
+      });
+
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       res.sendStatus(500);
     });
