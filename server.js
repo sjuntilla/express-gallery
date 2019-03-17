@@ -29,11 +29,15 @@ app.engine(
 app.set("view engine", "handlebars");
 
 app.get("/", (req, res) => {
-  return new Gallery()
-    .fetchAll()
-    .then(gallerytable => {
-      return res.render("main", {
-        gallerytable
+  return new Gallery().fetchAll()
+    .then((photo) => {
+      console.log(photo.models)
+      let arr = [];
+      photo.models.forEach(i => {
+        arr.push(i.attributes);
+      });
+      return res.render('main', {
+        arr
       });
     })
     .catch(err => {
@@ -43,10 +47,16 @@ app.get("/", (req, res) => {
 });
 
 app.get("/gallery", (req, res) => {
-  return new Gallery()
-    .fetchAll()
-    .then(gallerytable => {
-      return res.json(gallerytable);
+  return new Gallery().fetchAll()
+    .then((photo) => {
+      console.log(photo.models)
+      let arr = [];
+      photo.models.forEach(i => {
+        arr.push(i.attributes);
+      });
+      return res.render('main', {
+        arr
+      });
     })
     .catch(err => {
       console.log(err);
@@ -74,22 +84,18 @@ app.post("/gallery", (req, res) => {
   return Gallery.forge({
     author: body.author,
     link: body.link,
-    description: body.description
-  })
-    .save(null, {
-      method: "insert"
-    })
-    .then(() => {
-      new Gallery({
-        link: body.link
-      })
-        .fetch()
-        .then(img => {
-          return res.json({
-            eat: "my entire ass"
-          });
-        });
+    description: body.description,
+  }).save(null, {
+    method: 'insert'
+  }).then(() => {
+    new Gallery({
+      link: body.link
+    }).fetch().then((img) => {
+      return res.json({
+        'eat': 'my entire ass'
+      });
     });
+  });
 });
 
 //RETRIEVES SPECIFIC IMAGE BY ID
@@ -100,8 +106,12 @@ app.get("/gallery/:id", (req, res) => {
       id: reqParams
     })
     .fetch()
-    .then(gallerytable => {
-      return res.json(gallerytable);
+    .then(img => {
+      let photo = img.attributes;
+
+      return res.render('fuck', {
+        photo
+      });
     })
     .catch(err => {
       console.log(err);
