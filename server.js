@@ -28,9 +28,14 @@ app.set('view engine', 'handlebars');
 
 app.get("/", (req, res) => {
   return new Gallery().fetchAll()
-    .then((gallerytable) => {
+    .then((photo) => {
+      console.log(photo.models)
+      let arr = [];
+      photo.models.forEach(i => {
+        arr.push(i.attributes);
+      });
       return res.render('main', {
-        gallerytable
+        arr
       });
 
     })
@@ -55,7 +60,6 @@ app.get("/gallery/new", (req, res) => {});
 
 //ACTUALLY ADDS AN IMAGE TO THE GALLERY
 app.post("/gallery", (req, res) => {
-
   const body = req.body;
   return Gallery.forge({
     author: body.author,
@@ -70,22 +74,24 @@ app.post("/gallery", (req, res) => {
       return res.json({
         'eat': 'my entire ass'
       });
-    })
-
+    });
   });
 });
 
 //RETRIEVES SPECIFIC IMAGE BY ID
 app.get("/gallery/:id", (req, res) => {
-
   let reqParams = req.params.id;
   return new Gallery()
     .where({
       id: reqParams
     })
     .fetch()
-    .then(gallerytable => {
-      return res.json(gallerytable);
+    .then(img => {
+      let photo = img.attributes;
+
+      return res.render('fuck', {
+        photo
+      });
     })
     .catch(err => {
       console.log(err);
