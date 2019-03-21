@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
+body {
+  display: flex;
+  flex-flow: nowrap column;
+  justify-content: flex-start;
+  margin-left: 10%;
+  margin-right: 10%;
+  background: url('https://i.imgur.com/adsBSWb.png');
+  font-family: 'Raleway', sans-serif;
+}
+
+div.border {
+  height: 11.5px;
+  width: 200px;
+  background: linear-gradient(90deg, rgb(234, 191, 185) 2%, rgb(234, 191, 185) 5%, transparent 90%);
+}
+
+.container {
+  display: flex;
+  width: 2000px;
+}
+
+a {
+  font-size: 15px;
+  color: rgb(128, 128, 128);
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgb(211, 211, 211);
+}
+
+.header {
+  display: flex;
+  padding-left: 15px;
+  margin-top: 15px;
+  background-color: rgba(255, 255, 255);
+  border-top: 1px solid rgb(220, 220, 220);
+  border-bottom: 1px solid rgb(220, 220, 220);
+  font-family: 'Raleway', sans-serif;
+  color: rgba(128, 128, 128);
+  font-size: 25px;
+  max-width: 1500px;
+}
+
+.header>* {
+  align-content: center;
+  margin-right: 10px;
+}
+
+.subtitle {
+  border-left: 1px solid #8f8f8f;
+  padding-left: 10px;
+}
+
+.imgcontainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 5px;
+  max-width: 1200px;
+  background-color: rgba(255, 255, 255);
+}
+
+.imgheader {
+  display: flex;
+  max-width: 1200px;
+}
+
+.post {
+  width: 200px;
+  padding: 5px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid rgb(220, 220, 220);
+}
+
+.postimg {
+  max-height: 180px;
+  max-width: 180px;
+  display: block;
+  margin: 0 auto;
+}
+
+h1#title {
+  font-weight: bold;
+  text-transform: uppercase;
+}

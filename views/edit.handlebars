@@ -1,0 +1,32 @@
+<h1 id="editHead">Edit Post</h1>
+<form action="/gallery/{{id}}" method="POST">
+    <div>
+        <img src={{link}} class="edit">
+        <h3>Editing: {{id}}</h3>
+    </div>
+    <div>
+        <label for="link">Link</label>
+        <input type="text" name="link" id="link">
+    </div>
+    <div>
+        <label for="author">Author</label>
+        <input type="text" name="author" id="author">
+    </div>
+    <div>
+        <label for="description">Description</label>
+        <input type="text" name="description" id="description">
+    </div>
+    <div>
+        <button>Finished Editing</button>
+    </div>
+</form>
+<form action="/gallery/{{id}}/delete" method="get">
+    <div>
+        <button type="submit">Delete Post</button>
+    </div>
+</form>
+<form action="/gallery" method="GET">
+    <div>
+        <button>Go Back to Gallery</button>
+    </div>
+</form>

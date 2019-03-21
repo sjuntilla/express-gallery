@@ -21,14 +21,14 @@ Any user should be able to access these routes:
     - `author` : Text
     - `link` : Text (the image url)
     - `description` : TextArea
-- `POST /gallery` to create a new gallery photo i
+<!-- - `POST /gallery` to create a new gallery photo i
 - `GET /gallery/:id/edit` to see a form to *edit* a gallery photo identified by the `:id` param
   - the form fields are:
     - `author` : Text
     - `link` : Text (the image url)
     - `description` : TextArea
 - `PUT /gallery/:id` updates a single gallery photo identified by the `:id` param
-- `DELETE /gallery/:id` to delete a single gallery photo identified by the `:id` param
+- `DELETE /gallery/:id` to delete a single gallery photo identified by the `:id` param -->
 
 ---
 
