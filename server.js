@@ -63,6 +63,7 @@ app.get("/gallery", (req, res) => {
       res.sendStatus(500);
     });
 });
+
 //DISPLAYS A PAGE WITH FORM TO ADD AN IMAGE TO THE GALLERY
 app.get("/gallery/new", (req, res) => {
   return new Gallery()
@@ -78,6 +79,7 @@ app.get("/gallery/new", (req, res) => {
     });
 });
 
+
 //ACTUALLY ADDS AN IMAGE TO THE GALLERY
 app.post("/gallery", (req, res) => {
   const body = req.body;
@@ -92,7 +94,7 @@ app.post("/gallery", (req, res) => {
       link: body.link
     }).fetch().then((img) => {
       return res.json({
-        'eat': 'my entire ass'
+        'success': true
       });
     });
   });
@@ -109,9 +111,9 @@ app.get("/gallery/:id", (req, res) => {
     .then(img => {
       let photo = img.attributes;
 
-      return res.render('fuck', {
-        photo
-      });
+      return res.render(
+        'id', photo
+      );
     })
     .catch(err => {
       console.log(err);
@@ -185,5 +187,5 @@ app.delete("/gallery/:id", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Whoever is listening on ${PORT} is a bitch!!!!!!`);
+  console.log(`Listening on port ${PORT}!`);
 });
