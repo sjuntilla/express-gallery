@@ -4,6 +4,7 @@ const app = express();
 const hbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 const fs = require("fs");
+
 const Gallery = require("./models/gallerymodel.js");
 
 const PORT = process.env.PORT;
@@ -66,7 +67,11 @@ app.get("/gallery", (req, res) => {
     });
 });
 
-//DISPLAYS A PAGE WITH FORM TO ADD AN IMAGE TO THE GALLERY
+/*
+ ***********************
+ * ADD
+ ***********************
+ */
 app.get("/gallery/new", (req, res) => {
   return new Gallery()
     .fetchAll()
@@ -81,27 +86,27 @@ app.get("/gallery/new", (req, res) => {
     });
 });
 
-
-//ACTUALLY ADDS AN IMAGE TO THE GALLERY
 app.post("/gallery", (req, res) => {
   const body = req.body;
   return Gallery.forge({
     author: body.author,
     link: body.link,
-    description: body.description,
-  }).save(null, {
-    method: 'insert'
-  }).then(() => {
-    new Gallery({
-      link: body.link
-    }).fetch().then((img) => {
-      return res.json({
-        'success': true
-      });
+    description: body.description
+  })
+    .save(null, {
+      method: "insert"
+    })
+    .then(() => {
+      new Gallery({
+        link: body.link
+      })
+        .fetch()
+        .then(img => {
+          return res.redirect("/gallery");
+        });
     });
 });
 
-//RETRIEVES SPECIFIC IMAGE BY ID
 app.get("/gallery/:id", (req, res) => {
   let reqParams = req.params.id;
   return new Gallery()
@@ -112,9 +117,7 @@ app.get("/gallery/:id", (req, res) => {
     .then(img => {
       let photo = img.attributes;
 
-      return res.render(
-        'id', photo
-      );
+      return res.render("id", photo);
     })
     .catch(err => {
       console.log(err);
@@ -122,7 +125,6 @@ app.get("/gallery/:id", (req, res) => {
     });
 });
 
-//DISPLAYS A PAGE WITH FORM THAT EDITS SPECIFIC IMAGE BY ID
 app.get("/gallery/:id/edit", (req, res) => {
   let paramsId = req.params.id;
   return Gallery.where({
@@ -137,7 +139,12 @@ app.get("/gallery/:id/edit", (req, res) => {
     });
 });
 
-//ACTUALLY EDITS AN IMAGE BY ID
+/*
+ ***********************
+ * EDIT
+ ***********************
+ */
+
 app.put("/gallery/:id", (req, res) => {
   const body = req.body;
   const paramsId = req.params.id;
@@ -161,15 +168,64 @@ app.put("/gallery/:id", (req, res) => {
           }
         )
         .then(() => {
-          return res.json({
-            "i hate": "bookshelf"
-          });
+          return res.redirect("/gallery");
         });
     });
 });
 
-//DELETES AN IMAGE BY ID
+app.post("/gallery/:id", (req, res) => {
+  const body = req.body;
+  const paramsId = req.params.id;
+
+  Gallery.where({
+    id: paramsId
+  })
+    .fetch()
+    .then(img => {
+      new Gallery({
+        id: paramsId
+      })
+        .save(
+          {
+            link: body.link,
+            description: body.description,
+            author: body.author
+          },
+          {
+            patch: true
+          }
+        )
+        .then(() => {
+          return res.redirect("/gallery");
+        });
+    });
+});
+
+/*
+ ***********************
+ * DELETE
+ ***********************
+ */
+
 app.delete("/gallery/:id", (req, res) => {
+  const paramsId = req.params.id;
+
+  Gallery.where({
+    id: paramsId
+  })
+    .fetch()
+    .then(img => {
+      new Gallery({
+        id: paramsId
+      })
+        .destroy()
+        .then(() => {
+          return res.redirect("/gallery");
+        });
+    });
+});
+
+app.get("/gallery/:id/delete", (req, res) => {
   const paramsId = req.params.id;
 
   Gallery.where({
