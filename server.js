@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const hbs = require("express-handlebars");
 const bodyParser = require("body-parser");
+const fs = require("fs");
 
 const Gallery = require("./models/gallerymodel.js");
 
@@ -29,14 +30,15 @@ app.engine(
 app.set("view engine", "handlebars");
 
 app.get("/", (req, res) => {
-  return new Gallery().fetchAll()
-    .then((photo) => {
-      console.log(photo.models)
+  return new Gallery()
+    .fetchAll()
+    .then(photo => {
+      console.log(photo.models);
       let arr = [];
       photo.models.forEach(i => {
         arr.push(i.attributes);
       });
-      return res.render('main', {
+      return res.render("main", {
         arr
       });
     })
@@ -47,14 +49,15 @@ app.get("/", (req, res) => {
 });
 
 app.get("/gallery", (req, res) => {
-  return new Gallery().fetchAll()
-    .then((photo) => {
-      console.log(photo.models)
+  return new Gallery()
+    .fetchAll()
+    .then(photo => {
+      console.log(photo.models);
       let arr = [];
       photo.models.forEach(i => {
         arr.push(i.attributes);
       });
-      return res.render('main', {
+      return res.render("main", {
         arr
       });
     })
@@ -86,18 +89,22 @@ app.get("/gallery/new", (req, res) => {
 app.post("/gallery", (req, res) => {
   const body = req.body;
   return Gallery.forge({
-    author: body.author,
-    link: body.link,
-    description: body.description,
-  }).save(null, {
-    method: 'insert'
-  }).then(() => {
-    new Gallery({
-      link: body.link
-    }).fetch().then((img) => {
-      return res.redirect('/gallery');
+      author: body.author,
+      link: body.link,
+      description: body.description
+    })
+    .save(null, {
+      method: "insert"
+    })
+    .then(() => {
+      new Gallery({
+          link: body.link
+        })
+        .fetch()
+        .then(img => {
+          return res.redirect("/gallery");
+        });
     });
-  });
 });
 
 app.get("/gallery/:id", (req, res) => {
@@ -110,9 +117,7 @@ app.get("/gallery/:id", (req, res) => {
     .then(img => {
       let photo = img.attributes;
 
-      return res.render(
-        'id', photo
-      );
+      return res.render("id", photo);
     })
     .catch(err => {
       console.log(err);
@@ -130,7 +135,7 @@ app.get("/gallery/:id/edit", (req, res) => {
       console.log(img.attributes);
       let id = img.attributes.id;
       let galleryObj = img.attributes;
-      res.render("edit", galleryObj)
+      res.render("edit", galleryObj);
     });
 });
 
@@ -230,6 +235,16 @@ app.get("/gallery/:id/delete", (req, res) => {
           return res.redirect("/gallery");
         });
     });
+});
+
+app.get("/css/styles.css", (req, res) => {
+  fs.readFile("./public/css/styles.css", (err, data) => {
+    if (err) {
+      console.log(err);
+    }
+    res.write(data.toString());
+    res.end();
+  });
 });
 
 app.listen(PORT, () => {
