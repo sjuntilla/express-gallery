@@ -247,6 +247,17 @@ app.get("/css/styles.css", (req, res) => {
   });
 });
 
+app.get("spiration_light.png", (req, res) => {
+  fs.readFile("./public/spiration_light.png", (err, data) => {
+    if (err) {
+      console.log(err);
+    }
+    res.write(data.toString());
+    res.end();
+  });
+});
+
+
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}!`);
 });
