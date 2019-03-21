@@ -1,7 +1,8 @@
 <h1 id="editHead">Edit Post</h1>
-<form action="/gallery" method="POST">
+<form action="/gallery/{{id}}" method="POST">
     <div>
-        <h3>Editing:{{id}}</h3>
+        <img src={{link}} class="edit">
+        <h3>Editing: {{id}}</h3>
     </div>
     <div>
         <label for="link">Link</label>
@@ -19,7 +20,7 @@
         <button>Finished Editing</button>
     </div>
 </form>
-<form action="/gallery/{{id}}/delete" method="GET">
+<form action="/gallery/{{id}}/delete" method="get">
     <div>
         <button type="submit">Delete Post</button>
     </div>

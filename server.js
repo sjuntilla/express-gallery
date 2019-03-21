@@ -89,17 +89,17 @@ app.get("/gallery/new", (req, res) => {
 app.post("/gallery", (req, res) => {
   const body = req.body;
   return Gallery.forge({
-    author: body.author,
-    link: body.link,
-    description: body.description
-  })
+      author: body.author,
+      link: body.link,
+      description: body.description
+    })
     .save(null, {
       method: "insert"
     })
     .then(() => {
       new Gallery({
-        link: body.link
-      })
+          link: body.link
+        })
         .fetch()
         .then(img => {
           return res.redirect("/gallery");
@@ -128,8 +128,8 @@ app.get("/gallery/:id", (req, res) => {
 app.get("/gallery/:id/edit", (req, res) => {
   let paramsId = req.params.id;
   return Gallery.where({
-    id: paramsId
-  })
+      id: paramsId
+    })
     .fetch()
     .then(img => {
       console.log(img.attributes);
@@ -150,23 +150,20 @@ app.put("/gallery/:id", (req, res) => {
   const paramsId = req.params.id;
 
   Gallery.where({
-    id: paramsId
-  })
+      id: paramsId
+    })
     .fetch()
     .then(img => {
       new Gallery({
-        id: paramsId
-      })
-        .save(
-          {
-            link: body.link,
-            description: body.description,
-            author: body.author
-          },
-          {
-            patch: true
-          }
-        )
+          id: paramsId
+        })
+        .save({
+          link: body.link,
+          description: body.description,
+          author: body.author
+        }, {
+          patch: true
+        })
         .then(() => {
           return res.redirect("/gallery");
         });
@@ -178,23 +175,20 @@ app.post("/gallery/:id", (req, res) => {
   const paramsId = req.params.id;
 
   Gallery.where({
-    id: paramsId
-  })
+      id: paramsId
+    })
     .fetch()
     .then(img => {
       new Gallery({
-        id: paramsId
-      })
-        .save(
-          {
-            link: body.link,
-            description: body.description,
-            author: body.author
-          },
-          {
-            patch: true
-          }
-        )
+          id: paramsId
+        })
+        .save({
+          link: body.link,
+          description: body.description,
+          author: body.author
+        }, {
+          patch: true
+        })
         .then(() => {
           return res.redirect("/gallery");
         });
@@ -211,13 +205,13 @@ app.delete("/gallery/:id", (req, res) => {
   const paramsId = req.params.id;
 
   Gallery.where({
-    id: paramsId
-  })
+      id: paramsId
+    })
     .fetch()
     .then(img => {
       new Gallery({
-        id: paramsId
-      })
+          id: paramsId
+        })
         .destroy()
         .then(() => {
           return res.redirect("/gallery");
@@ -229,13 +223,13 @@ app.get("/gallery/:id/delete", (req, res) => {
   const paramsId = req.params.id;
 
   Gallery.where({
-    id: paramsId
-  })
+      id: paramsId
+    })
     .fetch()
     .then(img => {
       new Gallery({
-        id: paramsId
-      })
+          id: paramsId
+        })
         .destroy()
         .then(() => {
           return res.redirect("/gallery");
@@ -252,6 +246,17 @@ app.get("/css/styles.css", (req, res) => {
     res.end();
   });
 });
+
+app.get("spiration_light.png", (req, res) => {
+  fs.readFile("./public/spiration_light.png", (err, data) => {
+    if (err) {
+      console.log(err);
+    }
+    res.write(data.toString());
+    res.end();
+  });
+});
+
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}!`);
