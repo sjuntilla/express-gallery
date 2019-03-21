@@ -29,6 +29,11 @@ a {
 
 a:hover {
   color: rgb(211, 211, 211);
+  opacity: 0.5;
+}
+
+img:hover {
+  filter: grayscale(75%);
 }
 
 .header {
