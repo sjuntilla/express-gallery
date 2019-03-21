@@ -1,7 +1,22 @@
-<h1>a motherfuckin smoke test</h1>
-<h1>gallery shit</h1>
-{{#each arr}}
-<h2>Author: {{author}}</h2>
-<img src={{link}}>
-<p>{{description}}</p>
-{{/each}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link type="text/css" rel="stylesheet" href="/css/styles.css">
+</head>
+<div class="header">
+    <h1 id="title">GAAAHLLERY</h1>
+    <p class="subtitle">gallery of celebrities eating things</p>
+</div>
+<div class="imgcontainer">
+    {{#each arr}}
+    <div class=" post">
+        <img src={{link}}>
+        <p>Author: {{author}}</p>
+        <hr>
+    </div>
+    {{!-- <p>{{description}}</p> --}}
+    {{/each}}
+</div>
+
+</html>

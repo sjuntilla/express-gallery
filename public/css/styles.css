@@ -1,0 +1,36 @@
+.header {
+  display: flex;
+  justify-content: center;
+  border: 1px solid #333333;
+  font-family: anton;
+}
+.header > * {
+  align-content: center;
+  margin-right: 10px;
+}
+.subtitle {
+  border-left: 1px solid #333333;
+  padding-left: 10px;
+}
+.imgcontainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  border: 1px solid #333333;
+}
+.post {
+  width: 200px;
+  padding: 15px;
+  margin: 15px;
+}
+
+img {
+  height: 80%;
+  width: 80%;
+  display: block;
+  margin: 0 auto;
+}
+body {
+  margin-left: 10%;
+  margin-right: 10%;
+}
