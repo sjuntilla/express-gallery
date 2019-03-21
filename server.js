@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const hbs = require("express-handlebars");
 const bodyParser = require("body-parser");
-
+const fs = require("fs");
 const Gallery = require("./models/gallerymodel.js");
 
 const PORT = process.env.PORT;
@@ -29,14 +29,15 @@ app.engine(
 app.set("view engine", "handlebars");
 
 app.get("/", (req, res) => {
-  return new Gallery().fetchAll()
-    .then((photo) => {
-      console.log(photo.models)
+  return new Gallery()
+    .fetchAll()
+    .then(photo => {
+      console.log(photo.models);
       let arr = [];
       photo.models.forEach(i => {
         arr.push(i.attributes);
       });
-      return res.render('main', {
+      return res.render("main", {
         arr
       });
     })
@@ -47,14 +48,15 @@ app.get("/", (req, res) => {
 });
 
 app.get("/gallery", (req, res) => {
-  return new Gallery().fetchAll()
-    .then((photo) => {
-      console.log(photo.models)
+  return new Gallery()
+    .fetchAll()
+    .then(photo => {
+      console.log(photo.models);
       let arr = [];
       photo.models.forEach(i => {
         arr.push(i.attributes);
       });
-      return res.render('main', {
+      return res.render("main", {
         arr
       });
     })
@@ -97,7 +99,6 @@ app.post("/gallery", (req, res) => {
         'success': true
       });
     });
-  });
 });
 
 //RETRIEVES SPECIFIC IMAGE BY ID
@@ -184,6 +185,16 @@ app.delete("/gallery/:id", (req, res) => {
           return res.redirect("/gallery");
         });
     });
+});
+
+app.get("/css/styles.css", (req, res) => {
+  fs.readFile("./public/css/styles.css", (err, data) => {
+    if (err) {
+      console.log(err);
+    }
+    res.write(data.toString());
+    res.end();
+  });
 });
 
 app.listen(PORT, () => {
