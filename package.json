@@ -18,13 +18,18 @@
   },
   "homepage": "https://github.com/sjuntilla/express-gallery#readme",
   "dependencies": {
+    "bcrypt": "^3.0.5",
     "body-parser": "^1.18.3",
     "bookshelf": "^0.14.2",
+    "connect-redis": "^3.4.1",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "express-handlebars": "^3.0.2",
+    "express-session": "^1.15.6",
     "handlebars": "^4.1.0",
     "knex": "^0.16.3",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "pg": "^7.8.2",
     "sqlite3": "^4.0.6"
   }
