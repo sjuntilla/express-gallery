@@ -52,7 +52,9 @@ passport.use(new localStrategy({
     })
 }));
 
-
+router.get('/register', (req, res) => {
+    res.render('register');
+})
 router.post('/register', (req, res) => {
     const {
         email,
@@ -70,9 +72,7 @@ router.post('/register', (req, res) => {
         }).save()
     }).then(user => {
         user = user.toJSON();
-        res.json({
-            user
-        })
+        res.redirect('/')
     }).catch(err => {
         console.log('err', err);
         res.json(err);
@@ -86,7 +86,7 @@ router.get('/login', (req, res) => {
 router.post('/login', passport.authenticate('local', {
     failureRedirect: 'http://google.com'
 }), (req, res) => {
-    res.send('???')
+    res.redirect('/')
 });
 
 router.post('/logout', (req, res) => {
