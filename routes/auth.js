@@ -53,7 +53,7 @@ passport.use(new localStrategy({
 }));
 
 
-router.post('/auth/register', (req, res) => {
+router.post('/register', (req, res) => {
     const {
         email,
         password
@@ -70,7 +70,9 @@ router.post('/auth/register', (req, res) => {
         }).save()
     }).then(user => {
         user = user.toJSON();
-        res.json(user)
+        res.json({
+            user
+        })
     }).catch(err => {
         console.log('err', err);
         res.json(err);
