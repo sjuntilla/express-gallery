@@ -5,11 +5,12 @@ const hbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const session = require('express-session');
-const redisStore = require('connect-redis')(session);
+const redis = require('connect-redis')(session);
 const passport = require('passport');
 
 const Gallery = require("./models/gallerymodel.js");
 const gRouter = require('./routes/gallery.js');
+const auth = require('./routes/auth.js');
 
 const PORT = process.env.PORT;
 if (!PORT) {
@@ -24,8 +25,11 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(session({
-  store: new redisStore(),
-  secret: 'aaaaAAA',
+  store: new redis({
+    url: 'redis://redis-server:6379',
+    logErrors: true
+  }),
+  secret: 'SESSION_SECRET',
   resave: false,
   saveUninitialized: false
 }));
@@ -51,6 +55,7 @@ app.get("/css/styles.css", (req, res) => {
 });
 
 app.use('/gallery', gRouter);
+app.use('/auth', auth);
 app.use('/', gRouter);
 
 app.listen(PORT, () => {

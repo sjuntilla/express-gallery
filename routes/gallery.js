@@ -21,25 +21,6 @@ router.get("/", (req, res) => {
         });
 });
 
-router.get("/gallery", (req, res) => {
-    return new Gallery()
-        .fetchAll()
-        .then(photo => {
-            console.log(photo.models);
-            let arr = [];
-            photo.models.forEach(i => {
-                arr.push(i.attributes);
-            });
-            return res.render("main", {
-                arr
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.sendStatus(500);
-        });
-});
-
 router.get("/gallery/new", (req, res) => {
     return new Gallery()
         .fetchAll()
