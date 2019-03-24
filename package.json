@@ -21,6 +21,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "bookshelf": "^0.14.2",
+    "connect-flash": "^0.1.1",
     "connect-redis": "^3.4.1",
     "dotenv": "^7.0.0",
     "electron-prebuilt": "^1.4.13",

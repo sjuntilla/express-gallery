@@ -3,6 +3,7 @@ const Users = require('../models/Users.js');
 const passport = require('passport');
 const localStrategy = require('passport-local');
 const bcrypt = require('bcryptjs');
+let flash = require('connect-flash');
 
 passport.serializeUser((user, done) => {
     console.log('serialize user', user);
@@ -30,23 +31,22 @@ passport.use(new localStrategy({
     Users.where({
         email
     }).fetch().then(user => {
-        if (user === null) {
-            return done(null, false, {
-                message: 'User does not exist.'
-            });
-        } else {
-            user = user.toJSON();
+        // if (user === null) {
+        //     return done(null, false, {
+        //         message: 'User does not exist.'
+        //     });
+        // } else {
+        user = user.toJSON();
 
-            bcrypt.compare(password, user.password).then(res => {
-                if (res) {
-                    return done(null, user)
-                } else {
-                    return done(null, false, {
-                        message: 'Incorrect username or password.'
-                    });
-                }
-            });
-        }
+        bcrypt.compare(password, user.password).then(res => {
+            if (res) {
+                done(null, user)
+            } else {
+                done(null, false, {
+                    message: 'Incorrect username or password.'
+                });
+            }
+        });
     }).catch(err => {
         return done(null, false)
     })
@@ -84,10 +84,15 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', passport.authenticate('local', {
-    failureRedirect: 'http://google.com'
+    successRedirect: '/gallery',
+    failureRedirect: '/auth/login'
 }), (req, res) => {
     res.redirect('/')
 });
+
+router.get('/fail', (req, res) => {
+    res.render('fail');
+})
 
 router.post('/logout', (req, res) => {
     req.logout();

@@ -26,7 +26,7 @@ app.use(
 app.use(bodyParser.json());
 app.use(session({
   store: new redis({
-    url: 'redis://redis-server:6379',
+    url: 'REDIS_HOSTNAME',
     logErrors: true
   }),
   secret: 'SESSION_SECRET',
