@@ -1,7 +1,16 @@
 const express = require('express');
 const router = require('express').Router();
 const Gallery = require('../models/gallerymodel.js');
+const auth = require('./auth.js');
+const passport = require('passport');
 
+function isAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        next();
+    } else {
+        res.redirect('/auth/login');
+    }
+}
 router.get("/", (req, res) => {
     return new Gallery()
         .fetchAll()
@@ -21,7 +30,7 @@ router.get("/", (req, res) => {
         });
 });
 
-router.get("/gallery/new", (req, res) => {
+router.get("/gallery/new", isAuthenticated, (req, res) => {
     return new Gallery()
         .fetchAll()
         .then(gallerytable => {
