@@ -1,18 +1,15 @@
-<h1 id="editHead">Add Image</h1>
-<form action="/gallery" method="POST">
-    <div>
-        <label for="link">Link</label>
-        <input type="url" name="link" id="link">
+<div class="ind">
+    <div class="newdiv">
+        <h1>Add Image</h1>
+        <form action="/gallery" method="POST">
+            <input type="url" name="link" id="link" placeholder="link">
+            <input type="text" name="author" id="author" placeholder="author">
+            <input type="text" name="description" id="description" placeholder="description">
+            <button>Upload</button>
+            <form action="/gallery" method="GET">
+                <button>Go Back to Gallery</button>
+            </form>
+        </form>
+
     </div>
-    <div>
-        <label for="author">Author</label>
-        <input type="text" name="author" id="author">
-    </div>
-    <div>
-        <label for="description">Description</label>
-        <input type="text" name="description" id="description">
-    </div>
-    <div>
-        <button>Upload</button>
-    </div>
-</form>
+</div>

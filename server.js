@@ -1,11 +1,17 @@
 const knex = require("./database/index.js");
 const express = require("express");
+const Users = require('./models/Users.js');
 const app = express();
 const hbs = require("express-handlebars");
 const bodyParser = require("body-parser");
-const fs = require("fs");
-
-const Gallery = require("./models/gallerymodel.js");
+const fs = require('fs');
+const session = require('express-session');
+const redis = require('connect-redis')(session);
+const passport = require('passport');
+const localStrategy = require('passport-local');
+const gRouter = require('./routes/gallery.js');
+const auth = require('./routes/auth.js');
+const bcrypt = require('bcryptjs');
 
 const PORT = process.env.PORT;
 if (!PORT) {
@@ -19,8 +25,18 @@ app.use(
   })
 );
 app.use(bodyParser.json());
+app.use(session({
+  store: new redis({
+    url: 'REDIS_HOSTNAME',
+    logErrors: true
+  }),
+  secret: 'SESSION_SECRET',
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
-//HBS STUFF
 app.engine(
   "handlebars",
   hbs({
@@ -29,213 +45,66 @@ app.engine(
 );
 app.set("view engine", "handlebars");
 
-app.get("/", (req, res) => {
-  return new Gallery()
-    .fetchAll()
-    .then(photo => {
-      console.log(photo.models);
-      let arr = [];
-      photo.models.forEach(i => {
-        arr.push(i.attributes);
+// after login
+passport.serializeUser((user, done) => {
+  console.log('serializing');
+  return done(null, {
+    id: user.id,
+    email: user.email
+  });
+});
+
+// after every request
+passport.deserializeUser((user, done) => {
+  console.log('deserializing');
+  return new Users({
+      id: user.id
+    }).fetch()
+    .then(user => {
+      return done(null, {
+        id: user.id,
+        email: user.email
       });
-      return res.render("main", {
-        arr
-      });
+    })
+    .catch((err) => {
+      console.log(err);
+      return done(err);
+    });
+});
+
+passport.use(new localStrategy({
+  usernameField: 'email'
+}, (email, password, done) => {
+  return new Users({
+      email: email
+    })
+    .fetch()
+    .then(user => {
+      console.log(user)
+      user = user.toJSON();
+
+      if (user === null) {
+        return done(null, false, {
+          message: 'bad email or password'
+        });
+      } else {
+        bcrypt.compare(password, user.password)
+          .then((res) => {
+            if (res) {
+              return done(null, user);
+            } else {
+              return done(null, false, {
+                message: 'bad email or password'
+              });
+            }
+          });
+      }
     })
     .catch(err => {
-      console.log(err);
-      res.sendStatus(500);
+      console.log('error: ', err);
+      return done(err); //500 error
     });
-});
-
-app.get("/gallery", (req, res) => {
-  return new Gallery()
-    .fetchAll()
-    .then(photo => {
-      console.log(photo.models);
-      let arr = [];
-      photo.models.forEach(i => {
-        arr.push(i.attributes);
-      });
-      return res.render("main", {
-        arr
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      res.sendStatus(500);
-    });
-});
-
-/*
- ***********************
- * ADD
- ***********************
- */
-app.get("/gallery/new", (req, res) => {
-  return new Gallery()
-    .fetchAll()
-    .then(gallerytable => {
-      return res.render("new", {
-        gallerytable
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      res.sendStatus(500);
-    });
-});
-
-app.post("/gallery", (req, res) => {
-  const body = req.body;
-  return Gallery.forge({
-      author: body.author,
-      link: body.link,
-      description: body.description
-    })
-    .save(null, {
-      method: "insert"
-    })
-    .then(() => {
-      new Gallery({
-          link: body.link
-        })
-        .fetch()
-        .then(img => {
-          return res.redirect("/gallery");
-        });
-    });
-});
-
-app.get("/gallery/:id", (req, res) => {
-  let reqParams = req.params.id;
-  return new Gallery()
-    .where({
-      id: reqParams
-    })
-    .fetch()
-    .then(img => {
-      let photo = img.attributes;
-
-      return res.render("id", photo);
-    })
-    .catch(err => {
-      console.log(err);
-      res.sendStatus(500);
-    });
-});
-
-app.get("/gallery/:id/edit", (req, res) => {
-  let paramsId = req.params.id;
-  return Gallery.where({
-      id: paramsId
-    })
-    .fetch()
-    .then(img => {
-      console.log(img.attributes);
-      let id = img.attributes.id;
-      let galleryObj = img.attributes;
-      res.render("edit", galleryObj);
-    });
-});
-
-/*
- ***********************
- * EDIT
- ***********************
- */
-
-app.put("/gallery/:id", (req, res) => {
-  const body = req.body;
-  const paramsId = req.params.id;
-
-  Gallery.where({
-      id: paramsId
-    })
-    .fetch()
-    .then(img => {
-      new Gallery({
-          id: paramsId
-        })
-        .save({
-          link: body.link,
-          description: body.description,
-          author: body.author
-        }, {
-          patch: true
-        })
-        .then(() => {
-          return res.redirect("/gallery");
-        });
-    });
-});
-
-app.post("/gallery/:id", (req, res) => {
-  const body = req.body;
-  const paramsId = req.params.id;
-
-  Gallery.where({
-      id: paramsId
-    })
-    .fetch()
-    .then(img => {
-      new Gallery({
-          id: paramsId
-        })
-        .save({
-          link: body.link,
-          description: body.description,
-          author: body.author
-        }, {
-          patch: true
-        })
-        .then(() => {
-          return res.redirect("/gallery");
-        });
-    });
-});
-
-/*
- ***********************
- * DELETE
- ***********************
- */
-
-app.delete("/gallery/:id", (req, res) => {
-  const paramsId = req.params.id;
-
-  Gallery.where({
-      id: paramsId
-    })
-    .fetch()
-    .then(img => {
-      new Gallery({
-          id: paramsId
-        })
-        .destroy()
-        .then(() => {
-          return res.redirect("/gallery");
-        });
-    });
-});
-
-app.get("/gallery/:id/delete", (req, res) => {
-  const paramsId = req.params.id;
-
-  Gallery.where({
-      id: paramsId
-    })
-    .fetch()
-    .then(img => {
-      new Gallery({
-          id: paramsId
-        })
-        .destroy()
-        .then(() => {
-          return res.redirect("/gallery");
-        });
-    });
-});
+}));
 
 app.get("/css/styles.css", (req, res) => {
   fs.readFile("./public/css/styles.css", (err, data) => {
@@ -247,16 +116,9 @@ app.get("/css/styles.css", (req, res) => {
   });
 });
 
-app.get("spiration_light.png", (req, res) => {
-  fs.readFile("./public/spiration_light.png", (err, data) => {
-    if (err) {
-      console.log(err);
-    }
-    res.write(data.toString());
-    res.end();
-  });
-});
-
+app.use('/gallery', gRouter);
+app.use('/auth', auth);
+app.use('/', gRouter);
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}!`);
