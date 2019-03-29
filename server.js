@@ -18,6 +18,7 @@ if (!PORT) {
   console.log("Port not found!");
 }
 
+const REDIS_HOSTNAME = process.env.REDIS_HOSTNAME;
 // EXPRESS SERVER STUFF
 app.use(
   bodyParser.urlencoded({
@@ -26,14 +27,11 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(session({
-  store: new redis({
-    url: 'REDIS_HOSTNAME',
-    logErrors: true
-  }),
-  secret: 'SESSION_SECRET',
+  store: new redis(),
+  secret: 'uuugh',
   resave: false,
   saveUninitialized: false
-}));
+}))
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -45,24 +43,19 @@ app.engine(
 );
 app.set("view engine", "handlebars");
 
-// after login
 passport.serializeUser((user, done) => {
-  console.log('serializing');
   return done(null, {
     id: user.id,
     email: user.email
   });
 });
 
-// after every request
 passport.deserializeUser((user, done) => {
-  console.log('deserializing');
   return new Users({
-      id: user.id
+      email: user.email
     }).fetch()
     .then(user => {
       return done(null, {
-        id: user.id,
         email: user.email
       });
     })
@@ -85,7 +78,7 @@ passport.use(new localStrategy({
 
       if (user === null) {
         return done(null, false, {
-          message: 'bad email or password'
+          message: 'Invalid credentials.'
         });
       } else {
         bcrypt.compare(password, user.password)
@@ -94,7 +87,7 @@ passport.use(new localStrategy({
               return done(null, user);
             } else {
               return done(null, false, {
-                message: 'bad email or password'
+                message: 'Invalid credentials.'
               });
             }
           });
@@ -102,7 +95,7 @@ passport.use(new localStrategy({
     })
     .catch(err => {
       console.log('error: ', err);
-      return done(err); //500 error
+      return done(err);
     });
 }));
 
