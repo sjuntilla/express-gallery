@@ -4,9 +4,9 @@ const Gallery = require('../models/gallerymodel.js');
 const auth = require('./auth.js');
 const passport = require('passport');
 
-function isAuthenticated(req, res, next) {
+function isAuthenticated(req, res, done) {
     if (req.isAuthenticated()) {
-        next();
+        done();
     } else {
         res.redirect('/auth/login');
     }

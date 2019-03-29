@@ -5,24 +5,18 @@ const User = require('../models/Users.js');
 const passport = require('passport');
 const localStrategy = require('passport-local');
 const bcrypt = require('bcryptjs');
-const saltRounds = 12;
 
 
 //AUTHENTICATION
-function isAuthenticated(req, res, next) {
+function isAuthenticated(req, res, done) {
     if (req.isAuthenticated()) {
-        next();
+        done();
     } else {
         res.redirect('/login');
     }
 }
 
-
 //METHODS
-router.get('/', isAuthenticated, (req, res) => {
-    res.redirect('/gallery');
-});
-
 router.get('/register', (req, res) => {
     res.status(200);
     res.render('register', {
@@ -50,7 +44,7 @@ router.post('/register', (req, res) => {
                 return res.redirect('/register');
             }
 
-            bcrypt.genSalt(saltRounds, (err, salt) => {
+            bcrypt.genSalt(12, (err, salt) => {
                 if (err) {
                     console.log(err);
                     res.status(500);
